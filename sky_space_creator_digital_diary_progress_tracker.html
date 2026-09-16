@@ -1,0 +1,1899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sky Space - Creator Digital Diary & Progress Tracker</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Nunito:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sky: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#06b6d4',
+                        },
+                        sun: {
+                            100: '#fef9c3',
+                            300: '#fde047',
+                            400: '#facc15',
+                            500: '#eab308',
+                        },
+                        dreamy: {
+                            purple: '#8b5cf6',
+                            lavender: '#ddd6fe',
+                            pink: '#f472b6',
+                            cloud: 'rgba(255, 255, 255, 0.82)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                        handwritten: ['Caveat', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Custom Customizations & Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(224, 242, 254, 0.5);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #93c5fd;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #60a5fa;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #38bdf8 0%, #7dd3fc 40%, #bae6fd 75%, #e0f2fe 100%);
+            min-height: 100vh;
+            color: #1e293b;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Cloud Cards */
+        .cloud-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 10px 30px -5px rgba(14, 165, 233, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+            border-radius: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .cloud-card:hover {
+            box-shadow: 0 15px 35px -5px rgba(14, 165, 233, 0.22);
+        }
+
+        .cloud-card-interactive:hover {
+            transform: translateY(-3px);
+        }
+
+        /* Sun Animation & Glowing Effect */
+        .glowing-sun {
+            position: fixed;
+            top: -60px;
+            right: 5%;
+            width: 240px;
+            height: 240px;
+            background: radial-gradient(circle, #fef08a 0%, #fde047 40%, rgba(250, 204, 21, 0.6) 70%, rgba(250, 204, 21, 0) 100%);
+            border-radius: 50%;
+            filter: blur(8px);
+            z-index: 0;
+            pointer-events: none;
+            animation: sunGlow 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes sunGlow {
+            0% { transform: scale(1) translateY(0); opacity: 0.85; }
+            100% { transform: scale(1.1) translateY(10px); opacity: 1; }
+        }
+
+        /* Sunbeam Rays Effect */
+        .sun-ray {
+            position: fixed;
+            top: 0;
+            right: 15%;
+            width: 300px;
+            height: 1000px;
+            background: linear-gradient(135deg, rgba(254, 240, 138, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
+            transform: rotate(-25deg);
+            transform-origin: top right;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Floating Clouds Background Animation */
+        .floating-cloud {
+            position: fixed;
+            background: rgba(255, 255, 255, 0.45);
+            border-radius: 100px;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(3px);
+            animation: floatCloud linear infinite;
+        }
+
+        .floating-cloud::before, .floating-cloud::after {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.45);
+            border-radius: 50%;
+        }
+
+        @keyframes floatCloud {
+            0% { transform: translateX(-200px); }
+            100% { transform: translateX(calc(100vw + 200px)); }
+        }
+
+        /* Sparkle Animation */
+        .sparkle {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background-color: #fff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
+            animation: sparklePulse 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes sparklePulse {
+            0% { transform: scale(0.3); opacity: 0.2; }
+            50% { transform: scale(1.2); opacity: 0.9; }
+            100% { transform: scale(0.3); opacity: 0.2; }
+        }
+
+        /* Digital Diary Lines */
+        .diary-page {
+            background-color: rgba(255, 255, 255, 0.92);
+            background-image: linear-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 100% 2rem;
+            line-height: 2rem;
+        }
+
+        /* Custom Checkbox Animation */
+        .custom-checkbox input:checked + div {
+            background-color: #8b5cf6;
+            border-color: #8b5cf6;
+        }
+        .custom-checkbox input:checked + div i {
+            display: block;
+        }
+
+        /* Navigation Active Pill */
+        .nav-btn.active {
+            background: #0284c7;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+        }
+
+        /* Hide elements controlled by toggle settings */
+        body.hide-clouds .floating-cloud { display: none !important; }
+        body.hide-sun .glowing-sun, body.hide-sun .sun-ray { display: none !important; }
+        body.hide-sparkles .sparkle { display: none !important; }
+    </style>
+</head>
+<body class="pb-24 lg:pb-8">
+
+    <!-- Dreamy Sky Visual Backdrop Elements -->
+    <div id="sun-element" class="glowing-sun"></div>
+    <div id="sun-ray-element" class="sun-ray"></div>
+    
+    <!-- Floating Background Clouds -->
+    <div class="floating-cloud w-48 h-16 top-12" style="animation-duration: 42s; animation-delay: 0s;"></div>
+    <div class="floating-cloud w-72 h-24 top-48" style="animation-duration: 65s; animation-delay: -15s;"></div>
+    <div class="floating-cloud w-36 h-12 top-96" style="animation-duration: 35s; animation-delay: -8s;"></div>
+    <div class="floating-cloud w-60 h-20 top-[600px]" style="animation-duration: 50s; animation-delay: -25s;"></div>
+
+    <!-- Background Sparkles -->
+    <div class="sparkle top-16 left-[15%]" style="animation-delay: 0.2s;"></div>
+    <div class="sparkle top-36 left-[45%]" style="animation-delay: 1.1s;"></div>
+    <div class="sparkle top-24 left-[75%]" style="animation-delay: 2.3s;"></div>
+    <div class="sparkle top-80 left-[10%]" style="animation-delay: 0.8s;"></div>
+    <div class="sparkle top-96 left-[60%]" style="animation-delay: 1.7s;"></div>
+
+    <!-- MAIN APP CONTAINER -->
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        
+        <!-- Header & Top Navigation Bar -->
+        <header class="cloud-card p-4 sm:p-5 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-400 to-dreamy-purple flex items-center justify-center text-white text-2xl shadow-md">
+                    <i class="fa-solid to-cloud-sun"></i>
+                    <i class="fa-solid fa-cloud-sun"></i>
+                </div>
+                <div>
+                    <h1 class="font-serif text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
+                        Sky Space
+                        <span class="text-xs font-sans px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-700 font-semibold border border-sky-200">Digital Diary</span>
+                    </h1>
+                    <p id="header-greeting" class="text-xs sm:text-sm text-slate-500 font-medium">Welcome back to your creative sanctuary ✨</p>
+                </div>
+            </div>
+
+            <!-- Desktop Navigation Menu -->
+            <nav class="hidden md:flex items-center gap-1 bg-sky-100/60 p-1.5 rounded-2xl border border-sky-200/50">
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn active px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-600 hover:text-slate-900">
+                    <i class="fa-solid fa-house"></i> Home
+                </button>
+                <button onclick="switchTab('content')" id="nav-content" class="nav-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-600 hover:text-slate-900">
+                    <i class="fa-solid fa-layer-group"></i> My Content
+                </button>
+                <button onclick="switchTab('calendar')" id="nav-calendar" class="nav-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-600 hover:text-slate-900">
+                    <i class="fa-regular fa-calendar-days"></i> Calendar
+                </button>
+                <button onclick="switchTab('ideas')" id="nav-ideas" class="nav-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-600 hover:text-slate-900">
+                    <i class="fa-regular fa-lightbulb"></i> Ideas
+                </button>
+                <button onclick="switchTab('diary')" id="nav-diary" class="nav-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-600 hover:text-slate-900">
+                    <i class="fa-solid fa-book-bookmark"></i> Diary
+                </button>
+                <button onclick="switchTab('customize')" id="nav-customize" class="nav-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-600 hover:text-slate-900">
+                    <i class="fa-solid fa-sliders"></i> Customize
+                </button>
+            </nav>
+
+            <!-- Quick Action Profile Pill -->
+            <div class="flex items-center gap-3">
+                <button onclick="switchTab('customize')" class="flex items-center gap-2 bg-white/80 hover:bg-white p-1.5 pr-3 rounded-full border border-sky-200 shadow-sm transition">
+                    <img id="top-avatar" src="https://placehold.co/100x100/bae6fd/0369a1?text=Me" alt="Avatar" class="w-8 h-8 rounded-full object-cover">
+                    <span id="top-username" class="text-xs font-bold text-slate-700">@creator</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- TAB 1: DASHBOARD / HOME VIEW -->
+        <main id="tab-dashboard" class="tab-content space-y-6">
+            <!-- Top Grid Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- Left: Creator Profile Card -->
+                <div class="cloud-card p-6 flex flex-col justify-between relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-sky-200/40 rounded-full blur-2xl pointer-events-none"></div>
+                    <div>
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="relative">
+                                <img id="profile-card-avatar" src="https://placehold.co/120x120/bae6fd/0369a1?text=Me" alt="Profile" class="w-20 h-20 rounded-2xl object-cover ring-4 ring-white shadow-md">
+                                <span class="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-400 border-2 border-white rounded-full"></span>
+                            </div>
+                            <button onclick="switchTab('customize')" class="text-xs bg-sky-100 hover:bg-sky-200 text-sky-700 px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-pen-to-square"></i> Edit Profile
+                            </button>
+                        </div>
+                        <h2 id="profile-card-name" class="font-serif text-2xl font-bold text-slate-800">Your Name</h2>
+                        <p id="profile-card-handle" class="text-xs text-sky-600 font-bold mb-3">@yourusername</p>
+                        
+                        <!-- Current Status Pill -->
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-dreamy-lavender/50 text-dreamy-purple border border-dreamy-purple/20 text-xs font-semibold mb-4">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <span id="profile-card-status">Currently creating something new ✨</span>
+                        </div>
+
+                        <p id="profile-card-bio" class="text-xs sm:text-sm text-slate-600 leading-relaxed italic">
+                            "Write your short creator bio here..."
+                        </p>
+                    </div>
+
+                    <!-- Creator Streak Banner -->
+                    <div class="mt-6 pt-4 border-t border-sky-100 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-500 flex items-center justify-center text-lg font-bold shadow-inner">
+                                🔥
+                            </div>
+                            <div>
+                                <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Creator Streak</span>
+                                <span id="dashboard-streak-count" class="text-sm font-extrabold text-slate-800">0 Days Streak</span>
+                            </div>
+                        </div>
+                        <span class="text-xs font-semibold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200/60">Keep glowing!</span>
+                    </div>
+                </div>
+
+                <!-- Middle: Monthly Content Goal Tracker -->
+                <div class="cloud-card p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <span id="dashboard-current-month" class="text-xs font-bold text-sky-600 uppercase tracking-wider">This Month</span>
+                                <h3 class="font-serif text-xl font-bold text-slate-800">Monthly Content Goal</h3>
+                            </div>
+                            <button onclick="switchTab('customize')" class="text-slate-400 hover:text-sky-600 transition text-sm">
+                                <i class="fa-solid fa-gear"></i>
+                            </button>
+                        </div>
+
+                        <!-- Progress Circle & Stats -->
+                        <div class="flex flex-col sm:flex-row items-center gap-6 my-2">
+                            <div class="relative w-32 h-32 flex-shrink-0 flex items-center justify-center">
+                                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                                    <path class="text-sky-100" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    <path id="goal-svg-circle" class="text-sky-500 transition-all duration-1000 ease-out" stroke-dasharray="0, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                </svg>
+                                <div class="absolute flex flex-col items-center justify-center text-center">
+                                    <span id="goal-percent-text" class="text-2xl font-extrabold text-slate-800">0%</span>
+                                    <span class="text-[10px] text-slate-400 font-bold uppercase">Done</span>
+                                </div>
+                            </div>
+
+                            <div class="w-full space-y-3">
+                                <div class="flex justify-between items-center text-xs bg-sky-50/80 p-2.5 rounded-xl border border-sky-100">
+                                    <span class="text-slate-500 font-semibold"><i class="fa-solid fa-bullseye text-sky-500 mr-1.5"></i> Target Goal:</span>
+                                    <span id="goal-target-num" class="font-extrabold text-slate-800">20</span>
+                                </div>
+                                <div class="flex justify-between items-center text-xs bg-emerald-50/80 p-2.5 rounded-xl border border-emerald-100">
+                                    <span class="text-slate-500 font-semibold"><i class="fa-solid fa-check-circle text-emerald-500 mr-1.5"></i> Posted/Completed:</span>
+                                    <span id="goal-completed-num" class="font-extrabold text-emerald-700">0</span>
+                                </div>
+                                <div class="flex justify-between items-center text-xs bg-amber-50/80 p-2.5 rounded-xl border border-amber-100">
+                                    <span class="text-slate-500 font-semibold"><i class="fa-solid fa-hourglass-half text-amber-500 mr-1.5"></i> Remaining:</span>
+                                    <span id="goal-remaining-num" class="font-extrabold text-amber-700">20</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar Footer -->
+                    <div class="mt-4 pt-3 border-t border-sky-100">
+                        <div class="w-full bg-sky-100 rounded-full h-2.5 overflow-hidden">
+                            <div id="goal-progress-bar" class="bg-gradient-to-r from-sky-400 to-dreamy-purple h-2.5 rounded-full transition-all duration-700" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Daily Note & Sunshine Motivational Card -->
+                <div class="space-y-6 flex flex-col justify-between">
+                    <!-- Daily Creator Note -->
+                    <div class="cloud-card p-5">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="text-xs font-extrabold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-regular fa-note-sticky text-amber-500"></i> Today's Little Note
+                            </h4>
+                            <span id="daily-note-date" class="text-[10px] text-slate-400 font-bold">Today</span>
+                        </div>
+                        <textarea id="daily-note-input" rows="2" placeholder="Write a quick thought, win, or reminder for today..." class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none resize-none text-slate-700"></textarea>
+                        <div class="flex justify-end mt-2">
+                            <button onclick="saveDailyNote()" class="text-xs bg-sky-500 hover:bg-sky-600 text-white font-bold px-3 py-1 rounded-lg shadow-sm transition">Save Note</button>
+                        </div>
+                    </div>
+
+                    <!-- Sunshine Motivational Card -->
+                    <div class="cloud-card p-5 bg-gradient-to-br from-sun-100/90 to-white border-sun-300/40 relative overflow-hidden">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-bold text-amber-700 uppercase tracking-wider flex items-center gap-1">
+                                <i class="fa-solid fa-sun text-amber-500"></i> Daily Motivation
+                            </span>
+                            <button onclick="switchTab('customize')" class="text-[11px] text-amber-600 hover:underline font-bold">Edit Quote</button>
+                        </div>
+                        <blockquote id="dashboard-motivation-quote" class="font-serif italic text-sm text-slate-700 leading-relaxed mb-2">
+                            "Your work does not have to be perfect to exist."
+                        </blockquote>
+                        <div class="text-right">
+                            <span class="font-handwritten text-lg text-amber-600 font-bold">✨ Glow & Create</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Dashboard Stats Summary Quick Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div class="cloud-card p-4 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-lg"><i class="fa-solid fa-box-archive"></i></div>
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-400">Total Content</span>
+                        <span id="stat-total-content" class="text-lg font-extrabold text-slate-800">0</span>
+                    </div>
+                </div>
+                <div class="cloud-card p-4 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg"><i class="fa-solid fa-circle-check"></i></div>
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-400">Total Posted</span>
+                        <span id="stat-total-posted" class="text-lg font-extrabold text-slate-800">0</span>
+                    </div>
+                </div>
+                <div class="cloud-card p-4 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-lg"><i class="fa-regular fa-lightbulb"></i></div>
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-400">Total Ideas</span>
+                        <span id="stat-total-ideas" class="text-lg font-extrabold text-slate-800">0</span>
+                    </div>
+                </div>
+                <div class="cloud-card p-4 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-dreamy-lavender text-dreamy-purple flex items-center justify-center text-lg"><i class="fa-solid fa-book"></i></div>
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-400">Diary Entries</span>
+                        <span id="stat-total-diary" class="text-lg font-extrabold text-slate-800">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Content Preview Table/List -->
+            <div class="cloud-card p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-serif text-xl font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-sky-500"></i> Recent Content Pipeline
+                    </h3>
+                    <button onclick="switchTab('content')" class="text-xs font-bold text-sky-600 hover:text-sky-700 flex items-center gap-1">
+                        View All <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+                
+                <div id="recent-content-list" class="space-y-3">
+                    <!-- Dynamic List Populated by JS -->
+                </div>
+            </div>
+        </main>
+
+        <!-- TAB 2: MY CONTENT TRACKER VIEW -->
+        <main id="tab-content" class="tab-content space-y-6 hidden">
+            <!-- Header Controls -->
+            <div class="cloud-card p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div>
+                    <h2 class="font-serif text-2xl font-bold text-slate-800">My Content Pipeline</h2>
+                    <p class="text-xs text-slate-500">Manage, track, and cross-post your creative projects.</p>
+                </div>
+                
+                <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                    <!-- Search Input -->
+                    <div class="relative flex-1 md:w-64">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
+                        <input type="text" id="content-search-input" onkeyup="renderContentList()" placeholder="Search title or topic..." class="w-full pl-9 pr-4 py-2 text-xs bg-sky-50/50 border border-sky-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-400">
+                    </div>
+                    <!-- Add Button -->
+                    <button onclick="openContentModal()" class="w-full md:w-auto px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-xl text-xs font-bold shadow-md transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-plus"></i> New Content Item
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-1">
+                <button onclick="filterContentByStatus('All')" class="content-filter-btn active px-4 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-700 shadow-sm border border-sky-100 hover:bg-sky-50">All</button>
+                <button onclick="filterContentByStatus('Idea')" class="content-filter-btn px-4 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-700 shadow-sm border border-sky-100 hover:bg-sky-50">Idea</button>
+                <button onclick="filterContentByStatus('Planning')" class="content-filter-btn px-4 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-700 shadow-sm border border-sky-100 hover:bg-sky-50">Planning</button>
+                <button onclick="filterContentByStatus('In Progress')" class="content-filter-btn px-4 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-700 shadow-sm border border-sky-100 hover:bg-sky-50">In Progress</button>
+                <button onclick="filterContentByStatus('Ready')" class="content-filter-btn px-4 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-700 shadow-sm border border-sky-100 hover:bg-sky-50">Ready</button>
+                <button onclick="filterContentByStatus('Posted')" class="content-filter-btn px-4 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-700 shadow-sm border border-sky-100 hover:bg-sky-50">Posted</button>
+                <button onclick="filterContentByStatus('Archived')" class="content-filter-btn px-4 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-700 shadow-sm border border-sky-100 hover:bg-sky-50">Archived</button>
+            </div>
+
+            <!-- Content Grid/List -->
+            <div id="content-items-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamic Content Cards Populated Here -->
+            </div>
+        </main>
+
+        <!-- TAB 3: CALENDAR VIEW -->
+        <main id="tab-calendar" class="tab-content space-y-6 hidden">
+            <div class="cloud-card p-6">
+                <!-- Calendar Header -->
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="font-serif text-2xl font-bold text-slate-800">Content Calendar</h2>
+                        <p class="text-xs text-slate-500">Map out deadlines and scheduled publishing dates.</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="changeCalendarMonth(-1)" class="w-8 h-8 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-700 flex items-center justify-center transition"><i class="fa-solid fa-chevron-left"></i></button>
+                        <span id="calendar-month-year" class="font-bold text-slate-700 text-sm w-36 text-center">Month Year</span>
+                        <button onclick="changeCalendarMonth(1)" class="w-8 h-8 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-700 flex items-center justify-center transition"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- Calendar Days Header -->
+                <div class="grid grid-cols-7 gap-2 text-center text-xs font-extrabold text-slate-400 mb-2">
+                    <div>SUN</div><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div>
+                </div>
+
+                <!-- Calendar Grid Matrix -->
+                <div id="calendar-grid" class="grid grid-cols-7 gap-2">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </main>
+
+        <!-- TAB 4: IDEAS IN THE CLOUDS -->
+        <main id="tab-ideas" class="tab-content space-y-6 hidden">
+            <div class="cloud-card p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div>
+                    <h2 class="font-serif text-2xl font-bold text-slate-800">Ideas in the Clouds ☁️</h2>
+                    <p class="text-xs text-slate-500">Your quick idea dump. Capture spark thoughts before they fly away.</p>
+                </div>
+                <button onclick="openIdeaModal()" class="px-4 py-2 bg-dreamy-purple hover:bg-purple-700 text-white rounded-xl text-xs font-bold shadow-md transition flex items-center gap-2">
+                    <i class="fa-solid fa-lightbulb"></i> Add New Idea
+                </button>
+            </div>
+
+            <!-- Ideas Cards Grid -->
+            <div id="ideas-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Populated by JS -->
+            </div>
+        </main>
+
+        <!-- TAB 5: CREATOR DIARY -->
+        <main id="tab-diary" class="tab-content space-y-6 hidden">
+            <div class="cloud-card p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div>
+                    <h2 class="font-serif text-2xl font-bold text-slate-800">Creator Digital Diary 📖</h2>
+                    <p class="text-xs text-slate-500">Document your journey, reflections, learnings, and personal milestones.</p>
+                </div>
+                <div class="flex items-center gap-3 w-full md:w-auto">
+                    <input type="text" id="diary-search-input" onkeyup="renderDiaryEntries()" placeholder="Search diary..." class="px-3 py-2 text-xs bg-sky-50/50 border border-sky-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-400 flex-1 md:w-48">
+                    <button onclick="openDiaryModal()" class="px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-xl text-xs font-bold shadow-md transition flex items-center gap-2 flex-shrink-0">
+                        <i class="fa-solid fa-pen-fancy"></i> New Entry
+                    </button>
+                </div>
+            </div>
+
+            <!-- Diary Entries List -->
+            <div id="diary-entries-container" class="space-y-6">
+                <!-- Populated by JS -->
+            </div>
+        </main>
+
+        <!-- TAB 6: CUSTOMIZATION & EDIT MY SPACE VIEW -->
+        <main id="tab-customize" class="tab-content space-y-6 hidden">
+            <div class="cloud-card p-6">
+                <h2 class="font-serif text-2xl font-bold text-slate-800 mb-1">Edit My Space & Settings ⚙️</h2>
+                <p class="text-xs text-slate-500 mb-6">Customize every aspect of your creative space. All changes save automatically.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Column 1: Profile & Greeting Customization -->
+                    <div class="space-y-6">
+                        <div class="border-b border-sky-100 pb-4">
+                            <h3 class="text-sm font-extrabold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-user-gear text-sky-500"></i> Creator Profile
+                            </h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1">Profile Photo</label>
+                                    <div class="flex items-center gap-4">
+                                        <img id="custom-avatar-preview" src="https://placehold.co/100x100/bae6fd/0369a1?text=Me" class="w-14 h-14 rounded-2xl object-cover ring-2 ring-sky-300">
+                                        <input type="file" id="custom-avatar-input" accept="image/*" onchange="handleAvatarUpload(event)" class="text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-sky-100 file:text-sky-700 hover:file:bg-sky-200">
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-600 mb-1">Creator Name</label>
+                                        <input type="text" id="setting-name" class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-600 mb-1">Username</label>
+                                        <input type="text" id="setting-username" class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1">Current Creator Status</label>
+                                    <input type="text" id="setting-status" class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1">Bio</label>
+                                    <textarea id="setting-bio" rows="2" class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none resize-none"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dashboard & Goal Settings -->
+                        <div>
+                            <h3 class="text-sm font-extrabold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-bullseye text-sky-500"></i> Goals & Greeting
+                            </h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1">Dashboard Greeting</label>
+                                    <input type="text" id="setting-greeting" class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-600 mb-1">Current Month Label</label>
+                                        <input type="text" id="setting-month-label" class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-600 mb-1">Monthly Goal Target Count</label>
+                                        <input type="number" id="setting-goal-target" min="1" class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1">Motivational Quote</label>
+                                    <textarea id="setting-motivation" rows="2" class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none resize-none"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Platforms, Categories & Data Management -->
+                    <div class="space-y-6">
+                        <!-- Customizable Platforms -->
+                        <div class="border-b border-sky-100 pb-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-sm font-extrabold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+                                    <i class="fa-solid fa-share-nodes text-sky-500"></i> Custom Platforms
+                                </h3>
+                                <button onclick="addCustomPlatform()" class="text-xs bg-sky-100 hover:bg-sky-200 text-sky-700 font-bold px-2.5 py-1 rounded-lg transition">+ Add</button>
+                            </div>
+                            <div id="custom-platforms-list" class="space-y-2 max-h-40 overflow-y-auto pr-1">
+                                <!-- Dynamic List -->
+                            </div>
+                        </div>
+
+                        <!-- Customizable Categories -->
+                        <div class="border-b border-sky-100 pb-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-sm font-extrabold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+                                    <i class="fa-solid fa-tags text-sky-500"></i> Custom Categories
+                                </h3>
+                                <button onclick="addCustomCategory()" class="text-xs bg-sky-100 hover:bg-sky-200 text-sky-700 font-bold px-2.5 py-1 rounded-lg transition">+ Add</button>
+                            </div>
+                            <div id="custom-categories-list" class="space-y-2 max-h-40 overflow-y-auto pr-1">
+                                <!-- Dynamic List -->
+                            </div>
+                        </div>
+
+                        <!-- Appearance Toggles -->
+                        <div class="border-b border-sky-100 pb-4">
+                            <h3 class="text-sm font-extrabold text-slate-700 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-wand-magic text-sky-500"></i> Visual Effects
+                            </h3>
+                            <div class="grid grid-cols-3 gap-2">
+                                <label class="flex items-center gap-2 text-xs font-bold text-slate-600 cursor-pointer">
+                                    <input type="checkbox" id="toggle-sun" onchange="updateAppearanceToggles()" checked class="rounded text-sky-500"> Sun Effect
+                                </label>
+                                <label class="flex items-center gap-2 text-xs font-bold text-slate-600 cursor-pointer">
+                                    <input type="checkbox" id="toggle-clouds" onchange="updateAppearanceToggles()" checked class="rounded text-sky-500"> Background Clouds
+                                </label>
+                                <label class="flex items-center gap-2 text-xs font-bold text-slate-600 cursor-pointer">
+                                    <input type="checkbox" id="toggle-sparkles" onchange="updateAppearanceToggles()" checked class="rounded text-sky-500"> Sparkles
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Data Export / Import / Reset -->
+                        <div>
+                            <h3 class="text-sm font-extrabold text-slate-700 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-database text-sky-500"></i> Data & Backup
+                            </h3>
+                            <div class="flex flex-wrap gap-3">
+                                <button onclick="exportAppData()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold transition flex items-center gap-2">
+                                    <i class="fa-solid fa-download"></i> Export Backup
+                                </button>
+                                <label class="px-3.5 py-2 bg-sky-100 hover:bg-sky-200 text-sky-700 rounded-xl text-xs font-bold cursor-pointer transition flex items-center gap-2">
+                                    <i class="fa-solid fa-upload"></i> Import Backup
+                                    <input type="file" id="import-file-input" accept=".json" onchange="importAppData(event)" class="hidden">
+                                </label>
+                                <button onclick="openResetConfirmationModal()" class="px-3.5 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-xl text-xs font-bold transition flex items-center gap-2">
+                                    <i class="fa-solid fa-trash"></i> Reset Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-4 border-t border-sky-100 flex justify-end">
+                    <button onclick="saveAllSettings()" class="px-6 py-2.5 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl text-sm shadow-md transition flex items-center gap-2">
+                        <i class="fa-solid fa-floppy-disk"></i> Save Space Settings
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Mobile Bottom Navigation Bar -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-sky-200 px-4 py-2 z-40 flex justify-between items-center shadow-lg">
+        <button onclick="switchTab('dashboard')" id="mobile-nav-dashboard" class="mobile-nav-btn flex flex-col items-center text-sky-600 font-bold text-[10px]">
+            <i class="fa-solid fa-house text-lg"></i> Home
+        </button>
+        <button onclick="switchTab('content')" id="mobile-nav-content" class="mobile-nav-btn flex flex-col items-center text-slate-400 font-bold text-[10px]">
+            <i class="fa-solid fa-layer-group text-lg"></i> Content
+        </button>
+        <button onclick="switchTab('calendar')" id="mobile-nav-calendar" class="mobile-nav-btn flex flex-col items-center text-slate-400 font-bold text-[10px]">
+            <i class="fa-regular fa-calendar-days text-lg"></i> Calendar
+        </button>
+        <button onclick="switchTab('ideas')" id="mobile-nav-ideas" class="mobile-nav-btn flex flex-col items-center text-slate-400 font-bold text-[10px]">
+            <i class="fa-regular fa-lightbulb text-lg"></i> Ideas
+        </button>
+        <button onclick="switchTab('diary')" id="mobile-nav-diary" class="mobile-nav-btn flex flex-col items-center text-slate-400 font-bold text-[10px]">
+            <i class="fa-solid fa-book-bookmark text-lg"></i> Diary
+        </button>
+        <button onclick="switchTab('customize')" id="mobile-nav-customize" class="mobile-nav-btn flex flex-col items-center text-slate-400 font-bold text-[10px]">
+            <i class="fa-solid fa-sliders text-lg"></i> Settings
+        </button>
+    </nav>
+
+    <!-- MODAL 1: CONTENT ITEM MODAL -->
+    <div id="content-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
+        <div class="cloud-card w-full max-w-xl p-6 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeContentModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
+            <h3 id="content-modal-title" class="font-serif text-xl font-bold text-slate-800 mb-4">Add Content Item</h3>
+            
+            <form id="content-form" onsubmit="handleContentSubmit(event)" class="space-y-4">
+                <input type="hidden" id="content-id">
+                
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Content Title *</label>
+                    <input type="text" id="content-title" required placeholder="e.g., Summer Vlog 01 / Tech Review" class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Category</label>
+                        <select id="content-category" class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                            <!-- Dynamic -->
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Status</label>
+                        <select id="content-status" class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                            <option value="Idea">Idea</option>
+                            <option value="Planning">Planning</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Ready">Ready</option>
+                            <option value="Posted">Posted</option>
+                            <option value="Archived">Archived</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Content Type</label>
+                        <input type="text" id="content-type" placeholder="Video, Reel, Article" class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Creation Date</label>
+                        <input type="date" id="content-created-date" class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Target Deadline / Post Date</label>
+                        <input type="date" id="content-deadline" class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Platforms Posted / Checklist</label>
+                    <div id="content-modal-platforms" class="grid grid-cols-2 sm:grid-cols-3 gap-2 bg-sky-50/40 p-3 rounded-xl border border-sky-100">
+                        <!-- Dynamic checkboxes -->
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Reference Link / URL</label>
+                    <input type="url" id="content-link" placeholder="https://..." class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Notes & Details</label>
+                    <textarea id="content-notes" rows="3" placeholder="Script thoughts, hashtags, sound ideas..." class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none resize-none"></textarea>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeContentModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-bold transition">Cancel</button>
+                    <button type="submit" class="px-5 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-xl text-xs font-bold shadow-md transition">Save Content</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: DIARY ENTRY MODAL -->
+    <div id="diary-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
+        <div class="cloud-card w-full max-w-2xl p-6 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeDiaryModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
+            <h3 id="diary-modal-title" class="font-serif text-xl font-bold text-slate-800 mb-4">New Creator Diary Entry 📖</h3>
+            
+            <form id="diary-form" onsubmit="handleDiarySubmit(event)" class="space-y-4">
+                <input type="hidden" id="diary-id">
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Entry Title *</label>
+                        <input type="text" id="diary-title" required placeholder="e.g., Breakthrough moment / Filming day..." class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Date</label>
+                        <input type="date" id="diary-date" class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">What I Worked On</label>
+                        <textarea id="diary-worked" rows="2" class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none resize-none"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">What I Learned</label>
+                        <textarea id="diary-learned" rows="2" class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none resize-none"></textarea>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-emerald-700 mb-1">What Went Well ✨</label>
+                        <textarea id="diary-well" rows="2" class="w-full text-xs p-2.5 bg-emerald-50/40 border border-emerald-100 rounded-xl focus:ring-2 focus:ring-emerald-400 focus:outline-none resize-none"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-rose-600 mb-1">What Didn't Go Well 🌧️</label>
+                        <textarea id="diary-notwell" rows="2" class="w-full text-xs p-2.5 bg-rose-50/40 border border-rose-100 rounded-xl focus:ring-2 focus:ring-rose-400 focus:outline-none resize-none"></textarea>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Personal Thoughts & Journal Reflection</label>
+                    <textarea id="diary-thoughts" rows="4" placeholder="Express yourself freely..." class="w-full text-xs p-3 diary-page border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none resize-none text-slate-700"></textarea>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeDiaryModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-bold transition">Cancel</button>
+                    <button type="submit" class="px-5 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-xl text-xs font-bold shadow-md transition">Save Entry</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3: IDEA MODAL -->
+    <div id="idea-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
+        <div class="cloud-card w-full max-w-md p-6 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeIdeaModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
+            <h3 id="idea-modal-title" class="font-serif text-xl font-bold text-slate-800 mb-4">New Idea Cloud ☁️</h3>
+            
+            <form id="idea-form" onsubmit="handleIdeaSubmit(event)" class="space-y-4">
+                <input type="hidden" id="idea-id">
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Idea Title *</label>
+                    <input type="text" id="idea-title" required placeholder="Quick spark title..." class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Category</label>
+                        <select id="idea-category" class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                            <!-- Dynamic -->
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Priority</label>
+                        <select id="idea-priority" class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                            <option value="Low">Low Priority</option>
+                            <option value="Medium" selected>Medium Priority</option>
+                            <option value="High">High Priority</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Short Description</label>
+                    <textarea id="idea-desc" rows="3" placeholder="Describe the idea briefly..." class="w-full text-xs p-2.5 bg-sky-50/50 border border-sky-100 rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none resize-none"></textarea>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeIdeaModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-bold transition">Cancel</button>
+                    <button type="submit" class="px-5 py-2 bg-dreamy-purple hover:bg-purple-700 text-white rounded-xl text-xs font-bold shadow-md transition">Save Idea</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 4: RESET CONFIRMATION MODAL -->
+    <div id="reset-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="cloud-card w-full max-w-sm p-6 text-center space-y-4">
+            <div class="w-12 h-12 bg-rose-100 text-rose-500 rounded-full flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3 class="font-serif text-lg font-bold text-slate-800">Reset All Creator Data?</h3>
+            <p class="text-xs text-slate-500">This action will erase all content items, diary entries, ideas, and customizations. This cannot be undone.</p>
+            <div class="flex justify-center gap-3 pt-2">
+                <button onclick="closeResetModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-bold transition">Cancel</button>
+                <button onclick="confirmResetEverything()" class="px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white rounded-xl text-xs font-bold shadow-md transition">Yes, Reset All</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // STORAGE KEY
+        const STORAGE_KEY = 'sky_space_creator_app_data_v1';
+
+        // DEFAULT TEMPLATE INITIAL STATE
+        const DEFAULT_STATE = {
+            profile: {
+                name: 'Your Name',
+                username: 'yourusername',
+                bio: 'Write your creator bio here... Share your vision with the world! ✨',
+                status: 'Currently creating something new ✨',
+                avatar: 'https://placehold.co/120x120/bae6fd/0369a1?text=Me'
+            },
+            dashboard: {
+                greeting: 'Welcome back to your creative sanctuary ✨',
+                currentMonth: 'This Month',
+                monthlyGoal: 20,
+                motivation: '"Your work does not have to be perfect to exist."'
+            },
+            dailyNote: {
+                date: new Date().toISOString().split('T')[0],
+                text: ''
+            },
+            platforms: ['Platform 01', 'Platform 02', 'Platform 03', 'Platform 04'],
+            categories: ['Category 01', 'Category 02', 'Category 03', 'Category 04'],
+            appearance: {
+                sun: true,
+                clouds: true,
+                sparkles: true
+            },
+            content: [],
+            ideas: [],
+            diary: []
+        };
+
+        // GLOBAL IN-MEMORY APP STATE
+        let appState = JSON.parse(JSON.stringify(DEFAULT_STATE));
+        let activeTab = 'dashboard';
+        let currentStatusFilter = 'All';
+        let calendarDate = new Date();
+
+        // INITIALIZATION ON LOAD
+        window.onload = function() {
+            loadStateFromLocalStorage();
+            applyAppearanceSettings();
+            renderAllViews();
+            updateStreakCalculation();
+        };
+
+        // 1. LOCAL STORAGE LOGIC
+        function loadStateFromLocalStorage() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    appState = { ...DEFAULT_STATE, ...parsed };
+                }
+            } catch (e) {
+                console.error('Failed to load local state', e);
+            }
+        }
+
+        function saveStateToLocalStorage() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+            } catch (e) {
+                console.error('Failed to save state to localStorage', e);
+            }
+        }
+
+        // 2. NAVIGATION LOGIC
+        function switchTab(tabId) {
+            activeTab = tabId;
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+                btn.classList.remove('text-sky-600');
+                btn.classList.add('text-slate-400');
+            });
+
+            const targetTab = document.getElementById(`tab-${tabId}`);
+            if (targetTab) targetTab.classList.remove('hidden');
+
+            const desktopNav = document.getElementById(`nav-${tabId}`);
+            if (desktopNav) desktopNav.classList.add('active');
+
+            const mobileNav = document.getElementById(`mobile-nav-${tabId}`);
+            if (mobileNav) {
+                mobileNav.classList.remove('text-slate-400');
+                mobileNav.classList.add('text-sky-600');
+            }
+
+            renderAllViews();
+        }
+
+        // 3. RENDER MASTER CONTROLLER
+        function renderAllViews() {
+            renderHeaderAndProfile();
+            renderDashboardGoalsAndStats();
+            renderRecentContent();
+            renderContentList();
+            renderCalendar();
+            renderIdeas();
+            renderDiaryEntries();
+            populateCustomizationInputs();
+        }
+
+        // 4. HEADER & PROFILE RENDERING
+        function renderHeaderAndProfile() {
+            document.getElementById('header-greeting').textContent = appState.dashboard.greeting || 'Welcome back!';
+            document.getElementById('top-avatar').src = appState.profile.avatar;
+            document.getElementById('top-username').textContent = `@${appState.profile.username}`;
+
+            document.getElementById('profile-card-avatar').src = appState.profile.avatar;
+            document.getElementById('profile-card-name').textContent = appState.profile.name;
+            document.getElementById('profile-card-handle').textContent = `@${appState.profile.username}`;
+            document.getElementById('profile-card-status').textContent = appState.profile.status;
+            document.getElementById('profile-card-bio').textContent = appState.profile.bio;
+
+            document.getElementById('dashboard-current-month').textContent = appState.dashboard.currentMonth;
+            document.getElementById('dashboard-motivation-quote').textContent = appState.dashboard.motivation;
+
+            // Daily note initialization
+            const todayStr = new Date().toISOString().split('T')[0];
+            document.getElementById('daily-note-date').textContent = todayStr;
+            if (appState.dailyNote && appState.dailyNote.date === todayStr) {
+                document.getElementById('daily-note-input').value = appState.dailyNote.text || '';
+            } else {
+                document.getElementById('daily-note-input').value = '';
+            }
+        }
+
+        // 5. GOAL & STATS CALCULATION
+        function renderDashboardGoalsAndStats() {
+            const targetGoal = parseInt(appState.dashboard.monthlyGoal) || 1;
+            
+            // Calculate posted items
+            const postedItems = appState.content.filter(item => item.status === 'Posted');
+            const completedCount = postedItems.length;
+            const remainingCount = Math.max(0, targetGoal - completedCount);
+            const percent = Math.min(100, Math.round((completedCount / targetGoal) * 100));
+
+            // Goal DOM Updates
+            document.getElementById('goal-target-num').textContent = targetGoal;
+            document.getElementById('goal-completed-num').textContent = completedCount;
+            document.getElementById('goal-remaining-num').textContent = remainingCount;
+            document.getElementById('goal-percent-text').textContent = `${percent}%`;
+            document.getElementById('goal-progress-bar').style.width = `${percent}%`;
+
+            // SVG Circle dash offset
+            const svgCircle = document.getElementById('goal-svg-circle');
+            if (svgCircle) {
+                svgCircle.setAttribute('stroke-dasharray', `${percent}, 100`);
+            }
+
+            // Stats Update
+            document.getElementById('stat-total-content').textContent = appState.content.length;
+            document.getElementById('stat-total-posted').textContent = completedCount;
+            document.getElementById('stat-total-ideas').textContent = appState.ideas.length;
+            document.getElementById('stat-total-diary').textContent = appState.diary.length;
+        }
+
+        // 6. CREATOR STREAK CALCULATOR LOGIC
+        function updateStreakCalculation() {
+            const activeDates = new Set();
+            
+            // Collect dates from diary & content creation/posting
+            appState.diary.forEach(d => { if(d.date) activeDates.add(d.date); });
+            appState.content.forEach(c => { if(c.createdDate) activeDates.add(c.createdDate); });
+
+            let streak = 0;
+            let checkDate = new Date();
+            
+            while (true) {
+                const dateStr = checkDate.toISOString().split('T')[0];
+                if (activeDates.has(dateStr)) {
+                    streak++;
+                    checkDate.setDate(checkDate.getDate() - 1);
+                } else {
+                    // Check if today hasn't been logged yet, check yesterday
+                    if (streak === 0) {
+                        checkDate.setDate(checkDate.getDate() - 1);
+                        const yesterdayStr = checkDate.toISOString().split('T')[0];
+                        if (activeDates.has(yesterdayStr)) {
+                            streak++;
+                            checkDate.setDate(checkDate.getDate() - 1);
+                            continue;
+                        }
+                    }
+                    break;
+                }
+            }
+
+            document.getElementById('dashboard-streak-count').textContent = `${streak} Day${streak === 1 ? '' : 's'} Streak`;
+        }
+
+        // 7. CONTENT PIPELINE LIST RENDERING
+        function renderRecentContent() {
+            const container = document.getElementById('recent-content-list');
+            container.innerHTML = '';
+
+            if (appState.content.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-6 border-2 border-dashed border-sky-200 rounded-2xl bg-sky-50/40">
+                        <p class="text-xs font-bold text-slate-500">No content items added yet.</p>
+                        <p class="text-[11px] text-slate-400">Your next idea could live here ☁️</p>
+                        <button onclick="openContentModal()" class="mt-2 text-xs text-sky-600 hover:underline font-bold">+ Create First Item</button>
+                    </div>
+                `;
+                return;
+            }
+
+            const recentItems = [...appState.content].slice(-4).reverse();
+            recentItems.forEach(item => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'flex items-center justify-between p-3 bg-white/70 rounded-xl border border-sky-100 hover:bg-white transition';
+                itemEl.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg ${getStatusBadgeBg(item.status)} flex items-center justify-center text-xs font-bold">
+                            <i class="${getStatusIcon(item.status)}"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-800">${escapeHtml(item.title)}</h4>
+                            <span class="text-[10px] text-slate-400 font-semibold">${item.category || 'Uncategorized'} • Target: ${item.deadline || 'No date'}</span>
+                        </div>
+                    </div>
+                    <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-full ${getStatusBadgeBg(item.status)}">
+                        ${item.status}
+                    </span>
+                `;
+                container.appendChild(itemEl);
+            });
+        }
+
+        function filterContentByStatus(status) {
+            currentStatusFilter = status;
+            document.querySelectorAll('.content-filter-btn').forEach(btn => {
+                if (btn.textContent.trim() === status) {
+                    btn.classList.add('bg-sky-500', 'text-white');
+                    btn.classList.remove('bg-white', 'text-slate-700');
+                } else {
+                    btn.classList.remove('bg-sky-500', 'text-white');
+                    btn.classList.add('bg-white', 'text-slate-700');
+                }
+            });
+            renderContentList();
+        }
+
+        function renderContentList() {
+            const container = document.getElementById('content-items-container');
+            container.innerHTML = '';
+
+            const searchTerm = (document.getElementById('content-search-input')?.value || '').toLowerCase();
+
+            let filtered = appState.content.filter(item => {
+                const matchesStatus = (currentStatusFilter === 'All') || (item.status === currentStatusFilter);
+                const matchesSearch = item.title.toLowerCase().includes(searchTerm) || (item.notes && item.notes.toLowerCase().includes(searchTerm));
+                return matchesStatus && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12 cloud-card">
+                        <i class="fa-solid fa-cloud-moon text-4xl text-sky-300 mb-2"></i>
+                        <p class="text-sm font-bold text-slate-600">No content items found</p>
+                        <p class="text-xs text-slate-400">Your next idea could live here ☁️</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'cloud-card p-5 flex flex-col justify-between cloud-card-interactive';
+                
+                // Render checked platforms
+                const platformBadges = (item.postedPlatforms || []).map(p => `
+                    <span class="text-[10px] bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-md flex items-center gap-1">
+                        <i class="fa-solid fa-check"></i> ${escapeHtml(p)}
+                    </span>
+                `).join('');
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-start justify-between gap-2 mb-2">
+                            <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full ${getStatusBadgeBg(item.status)}">
+                                ${item.status}
+                            </span>
+                            <div class="flex items-center gap-1">
+                                <button onclick="duplicateContent('${item.id}')" title="Duplicate" class="text-xs text-slate-400 hover:text-sky-600 p-1"><i class="fa-regular fa-copy"></i></button>
+                                <button onclick="openContentModal('${item.id}')" title="Edit" class="text-xs text-slate-400 hover:text-sky-600 p-1"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteContent('${item.id}')" title="Delete" class="text-xs text-slate-400 hover:text-rose-500 p-1"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+
+                        <h3 class="font-serif text-lg font-bold text-slate-800 mb-1 leading-snug">${escapeHtml(item.title)}</h3>
+                        <p class="text-xs text-slate-500 mb-3 line-clamp-2">${escapeHtml(item.notes || 'No description added.')}</p>
+
+                        <div class="space-y-1.5 text-xs text-slate-600 mb-4">
+                            <div class="flex justify-between">
+                                <span class="text-slate-400 font-semibold">Category:</span>
+                                <span class="font-bold text-slate-700">${escapeHtml(item.category || 'General')}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-400 font-semibold">Deadline:</span>
+                                <span class="font-bold text-slate-700">${item.deadline || 'Unscheduled'}</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <span class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1.5">Platforms Posted</span>
+                            <div class="flex flex-wrap gap-1">
+                                ${platformBadges || '<span class="text-[10px] text-slate-400 italic">Not posted anywhere yet</span>'}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 border-t border-sky-100 flex items-center justify-between">
+                        ${item.link ? `<a href="${item.link}" target="_blank" class="text-xs text-sky-600 hover:underline font-bold flex items-center gap-1"><i class="fa-solid fa-link"></i> Link</a>` : '<span></span>'}
+                        <button onclick="toggleContentComplete('${item.id}')" class="text-xs px-3 py-1 rounded-xl font-bold transition ${item.status === 'Posted' ? 'bg-emerald-100 text-emerald-700' : 'bg-sky-100 hover:bg-sky-200 text-sky-700'}">
+                            ${item.status === 'Posted' ? '✓ Posted' : 'Mark as Posted'}
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function openContentModal(id = null) {
+            populateCategoriesDropdown('content-category');
+            renderModalPlatformsChecklist([]);
+
+            const modal = document.getElementById('content-modal');
+            const form = document.getElementById('content-form');
+            form.reset();
+
+            if (id) {
+                const item = appState.content.find(c => c.id === id);
+                if (item) {
+                    document.getElementById('content-modal-title').textContent = 'Edit Content Item';
+                    document.getElementById('content-id').value = item.id;
+                    document.getElementById('content-title').value = item.title;
+                    document.getElementById('content-category').value = item.category || appState.categories[0];
+                    document.getElementById('content-status').value = item.status;
+                    document.getElementById('content-type').value = item.type || '';
+                    document.getElementById('content-created-date').value = item.createdDate || '';
+                    document.getElementById('content-deadline').value = item.deadline || '';
+                    document.getElementById('content-link').value = item.link || '';
+                    document.getElementById('content-notes').value = item.notes || '';
+                    renderModalPlatformsChecklist(item.postedPlatforms || []);
+                }
+            } else {
+                document.getElementById('content-modal-title').textContent = 'Add Content Item';
+                document.getElementById('content-id').value = '';
+                document.getElementById('content-created-date').value = new Date().toISOString().split('T')[0];
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeContentModal() {
+            document.getElementById('content-modal').classList.add('hidden');
+        }
+
+        function renderModalPlatformsChecklist(checkedArray = []) {
+            const container = document.getElementById('content-modal-platforms');
+            container.innerHTML = '';
+            appState.platforms.forEach(platform => {
+                const isChecked = checkedArray.includes(platform);
+                const label = document.createElement('label');
+                label.className = 'flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer custom-checkbox';
+                label.innerHTML = `
+                    <input type="checkbox" value="${escapeHtml(platform)}" ${isChecked ? 'checked' : ''} class="hidden">
+                    <div class="w-4 h-4 rounded border border-sky-300 flex items-center justify-center text-white text-[10px] transition">
+                        <i class="fa-solid fa-check hidden"></i>
+                    </div>
+                    <span>${escapeHtml(platform)}</span>
+                `;
+                container.appendChild(label);
+            });
+        }
+
+        function handleContentSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('content-id').value;
+            
+            const selectedPlatforms = [];
+            document.querySelectorAll('#content-modal-platforms input[type="checkbox"]:checked').forEach(cb => {
+                selectedPlatforms.push(cb.value);
+            });
+
+            const contentObj = {
+                id: id || Date.now().toString(),
+                title: document.getElementById('content-title').value,
+                category: document.getElementById('content-category').value,
+                status: document.getElementById('content-status').value,
+                type: document.getElementById('content-type').value,
+                createdDate: document.getElementById('content-created-date').value,
+                deadline: document.getElementById('content-deadline').value,
+                link: document.getElementById('content-link').value,
+                notes: document.getElementById('content-notes').value,
+                postedPlatforms: selectedPlatforms
+            };
+
+            if (id) {
+                const index = appState.content.findIndex(c => c.id === id);
+                if (index !== -1) appState.content[index] = contentObj;
+            } else {
+                appState.content.push(contentObj);
+            }
+
+            saveStateToLocalStorage();
+            closeContentModal();
+            renderAllViews();
+            updateStreakCalculation();
+        }
+
+        function deleteContent(id) {
+            appState.content = appState.content.filter(c => c.id !== id);
+            saveStateToLocalStorage();
+            renderAllViews();
+        }
+
+        function duplicateContent(id) {
+            const item = appState.content.find(c => c.id === id);
+            if (item) {
+                const dup = { ...item, id: Date.now().toString(), title: `${item.title} (Copy)` };
+                appState.content.push(dup);
+                saveStateToLocalStorage();
+                renderAllViews();
+            }
+        }
+
+        function toggleContentComplete(id) {
+            const item = appState.content.find(c => c.id === id);
+            if (item) {
+                item.status = item.status === 'Posted' ? 'In Progress' : 'Posted';
+                saveStateToLocalStorage();
+                renderAllViews();
+            }
+        }
+
+        // 8. CALENDAR LOGIC
+        function changeCalendarMonth(delta) {
+            calendarDate.setMonth(calendarDate.getMonth() + delta);
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
+
+            const year = calendarDate.getFullYear();
+            const month = calendarDate.getMonth();
+
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            document.getElementById('calendar-month-year').textContent = `${monthNames[month]} ${year}`;
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            // Empty cells before month start
+            for (let i = 0; i < firstDay; i++) {
+                const emptyCell = document.createElement('div');
+                emptyCell.className = 'h-24 bg-sky-50/20 rounded-xl border border-sky-100/40 opacity-40';
+                grid.appendChild(emptyCell);
+            }
+
+            const todayStr = new Date().toISOString().split('T')[0];
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayDate = new Date(year, month, day);
+                const dateStr = dayDate.toISOString().split('T')[0];
+                const isToday = dateStr === todayStr;
+
+                // Find content for this date
+                const dayItems = appState.content.filter(c => c.deadline === dateStr || c.createdDate === dateStr);
+
+                const cell = document.createElement('div');
+                cell.className = `h-24 p-2 rounded-xl border border-sky-100 bg-white/70 hover:bg-white transition flex flex-col justify-between cursor-pointer ${isToday ? 'ring-2 ring-sky-400 bg-sky-50/80' : ''}`;
+                cell.onclick = () => {
+                    openContentModal();
+                    document.getElementById('content-deadline').value = dateStr;
+                };
+
+                let itemsHtml = dayItems.map(item => `
+                    <div class="text-[9px] truncate px-1.5 py-0.5 rounded ${getStatusBadgeBg(item.status)} font-bold">
+                        ${escapeHtml(item.title)}
+                    </div>
+                `).join('');
+
+                cell.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold ${isToday ? 'text-sky-600 font-extrabold' : 'text-slate-700'}">${day}</span>
+                        ${isToday ? '<span class="text-[9px] bg-sky-500 text-white font-bold px-1 rounded">Today</span>' : ''}
+                    </div>
+                    <div class="space-y-1 overflow-y-auto max-h-14">
+                        ${itemsHtml}
+                    </div>
+                `;
+                grid.appendChild(cell);
+            }
+        }
+
+        // 9. IDEAS IN THE CLOUDS LOGIC
+        function renderIdeas() {
+            const container = document.getElementById('ideas-container');
+            container.innerHTML = '';
+
+            if (appState.ideas.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12 cloud-card">
+                        <i class="fa-regular fa-lightbulb text-4xl text-amber-300 mb-2"></i>
+                        <p class="text-sm font-bold text-slate-600">No ideas in the cloud</p>
+                        <p class="text-xs text-slate-400">Your next idea could live here ☁️</p>
+                    </div>
+                `;
+                return;
+            }
+
+            appState.ideas.forEach(idea => {
+                const card = document.createElement('div');
+                card.className = 'cloud-card p-5 flex flex-col justify-between cloud-card-interactive border-t-4 border-t-dreamy-purple';
+                
+                const priorityColors = {
+                    Low: 'bg-slate-100 text-slate-600',
+                    Medium: 'bg-amber-100 text-amber-700',
+                    High: 'bg-rose-100 text-rose-700'
+                };
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full ${priorityColors[idea.priority || 'Medium']}">
+                                ${idea.priority || 'Medium'} Priority
+                            </span>
+                            <div class="flex items-center gap-1">
+                                <button onclick="openIdeaModal('${idea.id}')" title="Edit" class="text-xs text-slate-400 hover:text-sky-600 p-1"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteIdea('${idea.id}')" title="Delete" class="text-xs text-slate-400 hover:text-rose-500 p-1"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+
+                        <h3 class="font-serif text-lg font-bold text-slate-800 mb-2">${escapeHtml(idea.title)}</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-4">${escapeHtml(idea.description || 'No notes added.')}</p>
+                    </div>
+
+                    <div class="pt-3 border-t border-sky-100 flex items-center justify-between">
+                        <span class="text-[10px] text-slate-400 font-bold">${idea.category || 'General'}</span>
+                        <button onclick="convertIdeaToContent('${idea.id}')" class="text-xs bg-dreamy-purple hover:bg-purple-700 text-white font-bold px-3 py-1 rounded-xl shadow-sm transition flex items-center gap-1">
+                            <i class="fa-solid fa-wand-sparkles"></i> Convert to Content
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function openIdeaModal(id = null) {
+            populateCategoriesDropdown('idea-category');
+            const modal = document.getElementById('idea-modal');
+            const form = document.getElementById('idea-form');
+            form.reset();
+
+            if (id) {
+                const idea = appState.ideas.find(i => i.id === id);
+                if (idea) {
+                    document.getElementById('idea-modal-title').textContent = 'Edit Idea Cloud';
+                    document.getElementById('idea-id').value = idea.id;
+                    document.getElementById('idea-title').value = idea.title;
+                    document.getElementById('idea-category').value = idea.category || appState.categories[0];
+                    document.getElementById('idea-priority').value = idea.priority || 'Medium';
+                    document.getElementById('idea-desc').value = idea.description || '';
+                }
+            } else {
+                document.getElementById('idea-modal-title').textContent = 'New Idea Cloud ☁️';
+                document.getElementById('idea-id').value = '';
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeIdeaModal() {
+            document.getElementById('idea-modal').classList.add('hidden');
+        }
+
+        function handleIdeaSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('idea-id').value;
+            const ideaObj = {
+                id: id || Date.now().toString(),
+                title: document.getElementById('idea-title').value,
+                category: document.getElementById('idea-category').value,
+                priority: document.getElementById('idea-priority').value,
+                description: document.getElementById('idea-desc').value,
+                dateAdded: new Date().toISOString().split('T')[0]
+            };
+
+            if (id) {
+                const idx = appState.ideas.findIndex(i => i.id === id);
+                if (idx !== -1) appState.ideas[idx] = ideaObj;
+            } else {
+                appState.ideas.push(ideaObj);
+            }
+
+            saveStateToLocalStorage();
+            closeIdeaModal();
+            renderAllViews();
+        }
+
+        function deleteIdea(id) {
+            appState.ideas = appState.ideas.filter(i => i.id !== id);
+            saveStateToLocalStorage();
+            renderAllViews();
+        }
+
+        function convertIdeaToContent(ideaId) {
+            const idea = appState.ideas.find(i => i.id === ideaId);
+            if (idea) {
+                const newContent = {
+                    id: Date.now().toString(),
+                    title: idea.title,
+                    category: idea.category,
+                    status: 'Idea',
+                    type: '',
+                    createdDate: new Date().toISOString().split('T')[0],
+                    deadline: '',
+                    link: '',
+                    notes: idea.description,
+                    postedPlatforms: []
+                };
+                appState.content.push(newContent);
+                appState.ideas = appState.ideas.filter(i => i.id !== ideaId);
+                saveStateToLocalStorage();
+                renderAllViews();
+                switchTab('content');
+            }
+        }
+
+        // 10. DIARY LOGIC
+        function renderDiaryEntries() {
+            const container = document.getElementById('diary-entries-container');
+            container.innerHTML = '';
+
+            const searchTerm = (document.getElementById('diary-search-input')?.value || '').toLowerCase();
+            const filtered = appState.diary.filter(d => 
+                d.title.toLowerCase().includes(searchTerm) || 
+                (d.thoughts && d.thoughts.toLowerCase().includes(searchTerm))
+            );
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 cloud-card">
+                        <i class="fa-solid fa-book-open text-4xl text-sky-300 mb-2"></i>
+                        <p class="text-sm font-bold text-slate-600">No diary entries found</p>
+                        <p class="text-xs text-slate-400">Record your first creative milestone today 📖</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(entry => {
+                const card = document.createElement('div');
+                card.className = 'cloud-card p-6 space-y-4';
+                card.innerHTML = `
+                    <div class="flex items-center justify-between border-b border-sky-100 pb-3">
+                        <div>
+                            <span class="text-[10px] font-bold text-sky-600 uppercase tracking-wider">${entry.date || 'Undated'}</span>
+                            <h3 class="font-serif text-xl font-bold text-slate-800">${escapeHtml(entry.title)}</h3>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="openDiaryModal('${entry.id}')" class="text-xs text-slate-400 hover:text-sky-600 p-1"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteDiaryEntry('${entry.id}')" class="text-xs text-slate-400 hover:text-rose-500 p-1"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                        ${entry.worked ? `<div class="bg-sky-50/60 p-3 rounded-xl"><strong>What I Worked On:</strong> ${escapeHtml(entry.worked)}</div>` : ''}
+                        ${entry.learned ? `<div class="bg-purple-50/60 p-3 rounded-xl"><strong>What I Learned:</strong> ${escapeHtml(entry.learned)}</div>` : ''}
+                        ${entry.well ? `<div class="bg-emerald-50/60 p-3 rounded-xl text-emerald-800"><strong>What Went Well ✨:</strong> ${escapeHtml(entry.well)}</div>` : ''}
+                        ${entry.notwell ? `<div class="bg-rose-50/60 p-3 rounded-xl text-rose-800"><strong>What Didn't Go Well 🌧️:</strong> ${escapeHtml(entry.notwell)}</div>` : ''}
+                    </div>
+
+                    ${entry.thoughts ? `
+                        <div class="p-4 diary-page border border-sky-100 rounded-xl text-xs text-slate-700 leading-relaxed font-sans">
+                            ${escapeHtml(entry.thoughts)}
+                        </div>
+                    ` : ''}
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function openDiaryModal(id = null) {
+            const modal = document.getElementById('diary-modal');
+            const form = document.getElementById('diary-form');
+            form.reset();
+
+            if (id) {
+                const entry = appState.diary.find(d => d.id === id);
+                if (entry) {
+                    document.getElementById('diary-modal-title').textContent = 'Edit Diary Entry 📖';
+                    document.getElementById('diary-id').value = entry.id;
+                    document.getElementById('diary-title').value = entry.title;
+                    document.getElementById('diary-date').value = entry.date;
+                    document.getElementById('diary-worked').value = entry.worked || '';
+                    document.getElementById('diary-learned').value = entry.learned || '';
+                    document.getElementById('diary-well').value = entry.well || '';
+                    document.getElementById('diary-notwell').value = entry.notwell || '';
+                    document.getElementById('diary-thoughts').value = entry.thoughts || '';
+                }
+            } else {
+                document.getElementById('diary-modal-title').textContent = 'New Creator Diary Entry 📖';
+                document.getElementById('diary-id').value = '';
+                document.getElementById('diary-date').value = new Date().toISOString().split('T')[0];
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeDiaryModal() {
+            document.getElementById('diary-modal').classList.add('hidden');
+        }
+
+        function handleDiarySubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('diary-id').value;
+            const entryObj = {
+                id: id || Date.now().toString(),
+                title: document.getElementById('diary-title').value,
+                date: document.getElementById('diary-date').value,
+                worked: document.getElementById('diary-worked').value,
+                learned: document.getElementById('diary-learned').value,
+                well: document.getElementById('diary-well').value,
+                notwell: document.getElementById('diary-notwell').value,
+                thoughts: document.getElementById('diary-thoughts').value
+            };
+
+            if (id) {
+                const idx = appState.diary.findIndex(d => d.id === id);
+                if (idx !== -1) appState.diary[idx] = entryObj;
+            } else {
+                appState.diary.push(entryObj);
+            }
+
+            saveStateToLocalStorage();
+            closeDiaryModal();
+            renderAllViews();
+            updateStreakCalculation();
+        }
+
+        function deleteDiaryEntry(id) {
+            appState.diary = appState.diary.filter(d => d.id !== id);
+            saveStateToLocalStorage();
+            renderAllViews();
+            updateStreakCalculation();
+        }
+
+        function saveDailyNote() {
+            const noteText = document.getElementById('daily-note-input').value;
+            appState.dailyNote = {
+                date: new Date().toISOString().split('T')[0],
+                text: noteText
+            };
+            saveStateToLocalStorage();
+        }
+
+        // 11. CUSTOMIZATION & EDIT SPACE LOGIC
+        function populateCustomizationInputs() {
+            document.getElementById('setting-name').value = appState.profile.name;
+            document.getElementById('setting-username').value = appState.profile.username;
+            document.getElementById('setting-status').value = appState.profile.status;
+            document.getElementById('setting-bio').value = appState.profile.bio;
+            document.getElementById('custom-avatar-preview').src = appState.profile.avatar;
+
+            document.getElementById('setting-greeting').value = appState.dashboard.greeting;
+            document.getElementById('setting-month-label').value = appState.dashboard.currentMonth;
+            document.getElementById('setting-goal-target').value = appState.dashboard.monthlyGoal;
+            document.getElementById('setting-motivation').value = appState.dashboard.motivation;
+
+            document.getElementById('toggle-sun').checked = appState.appearance.sun;
+            document.getElementById('toggle-clouds').checked = appState.appearance.clouds;
+            document.getElementById('toggle-sparkles').checked = appState.appearance.sparkles;
+
+            renderPlatformsCustomizer();
+            renderCategoriesCustomizer();
+        }
+
+        function saveAllSettings() {
+            appState.profile.name = document.getElementById('setting-name').value;
+            appState.profile.username = document.getElementById('setting-username').value;
+            appState.profile.status = document.getElementById('setting-status').value;
+            appState.profile.bio = document.getElementById('setting-bio').value;
+
+            appState.dashboard.greeting = document.getElementById('setting-greeting').value;
+            appState.dashboard.currentMonth = document.getElementById('setting-month-label').value;
+            appState.dashboard.monthlyGoal = parseInt(document.getElementById('setting-goal-target').value) || 20;
+            appState.dashboard.motivation = document.getElementById('setting-motivation').value;
+
+            saveStateToLocalStorage();
+            applyAppearanceSettings();
+            renderAllViews();
+            alert('Settings saved successfully! ✨');
+        }
+
+        function handleAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    appState.profile.avatar = e.target.result;
+                    document.getElementById('custom-avatar-preview').src = e.target.result;
+                    saveStateToLocalStorage();
+                    renderHeaderAndProfile();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Platforms list customizer
+        function renderPlatformsCustomizer() {
+            const container = document.getElementById('custom-platforms-list');
+            container.innerHTML = '';
+            appState.platforms.forEach((platform, index) => {
+                const row = document.createElement('div');
+                row.className = 'flex items-center gap-2';
+                row.innerHTML = `
+                    <input type="text" value="${escapeHtml(platform)}" onchange="updatePlatformName(${index}, this.value)" class="flex-1 text-xs p-2 bg-sky-50/50 border border-sky-100 rounded-xl focus:outline-none">
+                    <button onclick="removePlatform(${index})" class="text-slate-400 hover:text-rose-500 text-xs px-2"><i class="fa-solid fa-trash"></i></button>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function addCustomPlatform() {
+            appState.platforms.push(`Platform 0${appState.platforms.length + 1}`);
+            renderPlatformsCustomizer();
+        }
+
+        function updatePlatformName(index, val) {
+            appState.platforms[index] = val;
+        }
+
+        function removePlatform(index) {
+            appState.platforms.splice(index, 1);
+            renderPlatformsCustomizer();
+        }
+
+        // Categories list customizer
+        function renderCategoriesCustomizer() {
+            const container = document.getElementById('custom-categories-list');
+            container.innerHTML = '';
+            appState.categories.forEach((cat, index) => {
+                const row = document.createElement('div');
+                row.className = 'flex items-center gap-2';
+                row.innerHTML = `
+                    <input type="text" value="${escapeHtml(cat)}" onchange="updateCategoryName(${index}, this.value)" class="flex-1 text-xs p-2 bg-sky-50/50 border border-sky-100 rounded-xl focus:outline-none">
+                    <button onclick="removeCategory(${index})" class="text-slate-400 hover:text-rose-500 text-xs px-2"><i class="fa-solid fa-trash"></i></button>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function addCustomCategory() {
+            appState.categories.push(`Category 0${appState.categories.length + 1}`);
+            renderCategoriesCustomizer();
+        }
+
+        function updateCategoryName(index, val) {
+            appState.categories[index] = val;
+        }
+
+        function removeCategory(index) {
+            appState.categories.splice(index, 1);
+            renderCategoriesCustomizer();
+        }
+
+        function populateCategoriesDropdown(elementId) {
+            const select = document.getElementById(elementId);
+            if (!select) return;
+            select.innerHTML = '';
+            appState.categories.forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat;
+                opt.textContent = cat;
+                select.appendChild(opt);
+            });
+        }
+
+        // Appearance Toggles
+        function updateAppearanceToggles() {
+            appState.appearance.sun = document.getElementById('toggle-sun').checked;
+            appState.appearance.clouds = document.getElementById('toggle-clouds').checked;
+            appState.appearance.sparkles = document.getElementById('toggle-sparkles').checked;
+            applyAppearanceSettings();
+            saveStateToLocalStorage();
+        }
+
+        function applyAppearanceSettings() {
+            document.body.classList.toggle('hide-sun', !appState.appearance.sun);
+            document.body.classList.toggle('hide-clouds', !appState.appearance.clouds);
+            document.body.classList.toggle('hide-sparkles', !appState.appearance.sparkles);
+        }
+
+        // 12. BACKUP, EXPORT & IMPORT
+        function exportAppData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `SkySpace_Creator_Backup_${new Date().toISOString().split('T')[0]}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importAppData(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const importedState = JSON.parse(e.target.result);
+                        appState = { ...DEFAULT_STATE, ...importedState };
+                        saveStateToLocalStorage();
+                        applyAppearanceSettings();
+                        renderAllViews();
+                        alert('Data imported successfully! ✨');
+                    } catch (err) {
+                        alert('Error importing JSON file. Please ensure valid format.');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        function openResetConfirmationModal() {
+            document.getElementById('reset-modal').classList.remove('hidden');
+        }
+
+        function closeResetModal() {
+            document.getElementById('reset-modal').classList.add('hidden');
+        }
+
+        function confirmResetEverything() {
+            localStorage.removeItem(STORAGE_KEY);
+            appState = JSON.parse(JSON.stringify(DEFAULT_STATE));
+            closeResetModal();
+            applyAppearanceSettings();
+            renderAllViews();
+            alert('App has been reset to default empty template.');
+        }
+
+        // 13. UTILITY HELPER FUNCTIONS
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        function getStatusBadgeBg(status) {
+            switch(status) {
+                case 'Idea': return 'bg-amber-100 text-amber-700';
+                case 'Planning': return 'bg-sky-100 text-sky-700';
+                case 'In Progress': return 'bg-purple-100 text-purple-700';
+                case 'Ready': return 'bg-indigo-100 text-indigo-700';
+                case 'Posted': return 'bg-emerald-100 text-emerald-700';
+                case 'Archived': return 'bg-slate-100 text-slate-600';
+                default: return 'bg-sky-100 text-sky-700';
+            }
+        }
+
+        function getStatusIcon(status) {
+            switch(status) {
+                case 'Idea': return 'fa-regular fa-lightbulb';
+                case 'Planning': return 'fa-solid fa-compass';
+                case 'In Progress': return 'fa-solid fa-spinner';
+                case 'Ready': return 'fa-solid fa-circle-check';
+                case 'Posted': return 'fa-solid fa-paper-plane';
+                case 'Archived': return 'fa-solid fa-box-archive';
+                default: return 'fa-solid fa-layer-group';
+            }
+        }
+    </script>
+</body>
+</html>
